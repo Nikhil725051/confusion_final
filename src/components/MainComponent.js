@@ -1,9 +1,11 @@
 import React, {Component} from "react";
 import Menu from "./MenuComponent";
 import { DISHES } from "../shared/dishes";
-import DishDetail from "./DishDetailComponent";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
+import Home from "./HomeComponent";
+import {Routes, Route, Navigate} from 'react-router-dom';
+import {Navbar} from "reactstrap";
 
 class Main extends Component
 {
@@ -12,19 +14,18 @@ class Main extends Component
     super(props);
     this.state={
       dishes:DISHES,
-      selectedDishId:null
   };
   }
 
-  onDishSelect(dishId){
-      this.setState({selectedDishId:dishId});
-  }
-
   render(){
+
     return (<div>
       <Header></Header>
-      <Menu dishes={this.state.dishes} onClick={(dishId)=>this.onDishSelect(dishId)}/>
-      <DishDetail dish={this.state.dishes.filter((dish)=>dish.id===this.state.selectedDishId)[0]}/>
+      <Routes>
+          <Route path='/home' element={<Home></Home>} />
+          <Route exact path='/menu' element={<Menu dishes={this.state.dishes}></Menu>} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
+      </Routes>
       <Footer></Footer>
     </div>);
   }
