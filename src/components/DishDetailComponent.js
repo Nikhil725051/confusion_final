@@ -1,18 +1,33 @@
 import React from "react";
-import { Card, CardImg, CardText, CardBody, CardTitle} from "reactstrap";
+import { Link } from "react-router-dom";
+import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem} from "reactstrap";
 
 
     function DishDetail(props){
         return (<div className="container">
-            {renderDish(props.dish)}
+            <div className="row">
+                <Breadcrumb>
+                  <BreadcrumbItem><Link to="Menu">Menu</Link></BreadcrumbItem>
+                  <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                </Breadcrumb>
+                <div className="col-12">
+                    <h3>{props.dish.name}</h3>
+                    <hr/>
+                </div>
+            </div>
+          <div className="row">
+          {RenderDish(props.dish)}
+          {RenderComments(props.comments)}
+          </div>
         </div>);
     }
 
-    function renderComments(comments){
+    function RenderComments(comments){
 
         if(comments!=null)
         {
-            return (<div>
+            return (<div className="col-12 col-md-5">
+                <h2>Comments</h2>
                 {comments.map((dishComment)=>{
                     return(<ul className="list-unstyled">
                         <li>{dishComment.comment}</li>
@@ -27,11 +42,10 @@ import { Card, CardImg, CardText, CardBody, CardTitle} from "reactstrap";
 
     }
 
-   function renderDish(dish){
+   function RenderDish(dish){
         if(dish!=null)
         {
-            return(<div className="row">
-                <div className="col-12 col-md-5 m-1">
+                return(<div className="col-12 col-md-5 m-1">
                 <Card>
                 <CardImg top src={dish.image} alt={dish.name}/>
                 <CardBody>
@@ -39,11 +53,6 @@ import { Card, CardImg, CardText, CardBody, CardTitle} from "reactstrap";
                     <CardText>{dish.description}</CardText>
                 </CardBody>
             </Card>
-            </div>
-            <div className="col-12 col-md-5">
-                <h2>Comments</h2>
-                {renderComments(dish.comments)}
-            </div>
             </div>
             
            );
