@@ -10,6 +10,7 @@ import { PROMOTIONS } from "../shared/promotions";
 import { LEADERS } from "../shared/leaders";
 import DishDetail from "./DishDetailComponent";
 import {COMMENTS} from "../shared/comments";
+import About from "./AboutComponent";
 
 
 function DishWithId(props){
@@ -40,8 +41,9 @@ class Main extends Component
       <Routes>
           <Route path="/home" element={<Home dish={this.state.dishes.filter((dish) => dish.featured)[0]} promotion={this.state.promotions.filter((promo) => promo.featured)[0]}  leader={this.state.leaders.filter((leader) => leader.featured)[0]}></Home>}></Route>
           <Route exact path="/menu" element={<Menu dishes={this.state.dishes}></Menu>} />
-          <Route exact path="/contactus" element={<Contact></Contact>}></Route>
+          <Route path="/contactus" element={<Contact></Contact>}></Route>
           <Route exact path="/menu/:dishId" element={<DishWithId dishes={this.state.dishes} comments={this.state.comments}></DishWithId>}></Route>
+          <Route path="/aboutus" element={<About leaders={this.state.leaders}></About>}></Route>
           <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
       <Footer></Footer>
