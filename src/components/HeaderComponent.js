@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem } from 'reactstrap';
+import React, { Component, Fragment } from "react";
+import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Modal, ModalBody, ModalHeader, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 class Header extends Component {
@@ -7,8 +7,11 @@ class Header extends Component {
         super(props);
     
         this.toggleNav = this.toggleNav.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
         this.state = {
-          isNavOpen: false
+          isNavOpen: false,
+          isModalOpen: false
         };
       }
 
@@ -16,6 +19,15 @@ class Header extends Component {
         this.setState({
           isNavOpen: !this.state.isNavOpen
         });
+      }
+
+      toggleModal(event){
+          this.setState({isModalOpen:!this.state.isModalOpen});
+      }
+
+      handleLogin(event){
+          alert('User Name: '+ this.username.value + 'Password: '+ this.password.value + 'Remember: '+ this.remember.checked);
+          event.preventDefault();
       }
 
     render() {
@@ -39,6 +51,11 @@ class Header extends Component {
                                 <NavLink className="nav-link" to='/contactus'><span className="fa fa-address-card fa-lg"></span> Contact Us</NavLink>
                             </NavItem>
                             </Nav>
+                            <Nav className="ml-auto" navbar>
+                             <NavItem className="pull-right">
+                                <Button outline onClick={this.toggleModal}><span className="fa fa-sign-in fa-lg"></span>Login</Button>
+                             </NavItem>
+                           </Nav>
                         </Collapse>
                 </Navbar>
                 <div className="p-5 text-white jumbotron">
@@ -51,6 +68,28 @@ class Header extends Component {
                      </div>
                  </div>
              </div>
+             <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                 <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                 <ModalBody>
+                     <Form onSubmit={this.handleLogin}>
+                         <FormGroup>
+                             <Label htmlFor="username">username</Label>
+                             <Input type="text" id="username" name="username" innerRef={(input)=>this.username=input}></Input>
+                         </FormGroup>
+                         <FormGroup>
+                             <Label htmlFor="password">Password</Label>
+                             <Input type="password" id="password" name="password" innerRef={(input)=>this.password=input}></Input>
+                         </FormGroup>
+                         <FormGroup check>
+                             <Label check>
+                                 <Input type="checkbox" name="remember" innerRef={(input)=>this.remember=input}></Input>
+                                 Remember Me
+                             </Label>
+                         </FormGroup>
+                         <Button type="submit" color="primary" value="submit">Login</Button>
+                     </Form>
+                 </ModalBody>
+             </Modal>
             </div>
         );
     }
