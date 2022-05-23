@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem} from "reactstrap";
+import Comment from "./CommentComponent";
+
 
 
     function DishDetail(props){
@@ -34,6 +36,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbIte
                         <li>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</li>
                     </ul>)
                 })}
+                <Comment></Comment>
             </div>);
         }
         else{
