@@ -19,12 +19,12 @@ import Comment from "./CommentComponent";
             </div>
           <div className="row">
           {RenderDish(props.dish)}
-          {RenderComments(props.comments)}
+         <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} ></RenderComments>
           </div>
         </div>);
     }
 
-    function RenderComments(comments){
+    function RenderComments({comments, dishId, addComment}){
 
         if(comments!=null)
         {
@@ -36,7 +36,7 @@ import Comment from "./CommentComponent";
                         <li>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</li>
                     </ul>)
                 })}
-                <Comment></Comment>
+                <Comment dishId={dishId} addComment={addComment}></Comment>
             </div>);
         }
         else{
