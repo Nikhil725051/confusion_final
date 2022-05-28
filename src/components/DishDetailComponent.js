@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem} from "reactstrap";
 import Comment from "./CommentComponent";
+import { Loading } from "./LoadingComponent";
 
 
 
@@ -18,7 +19,7 @@ import Comment from "./CommentComponent";
                 </div>
             </div>
           <div className="row">
-          {RenderDish(props.dish)}
+          <RenderDish dish={props.dish} isLoading={props.isLoading} errMess={props.errMess}></RenderDish>
          <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} ></RenderComments>
           </div>
         </div>);
@@ -45,24 +46,35 @@ import Comment from "./CommentComponent";
 
     }
 
-   function RenderDish(dish){
-        if(dish!=null)
-        {
-                return(<div className="col-12 col-md-5 m-1">
-                <Card>
-                <CardImg top src={dish.image} alt={dish.name}/>
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-            </div>
-            
-           );
-        }else
-        {
-            return(<div></div>);
+   function RenderDish({dish, isLoading, errMess}){
+        if(isLoading){
+            return(
+                <Loading></Loading>
+            );
+        }else if(errMess){
+            return (<div className="col-12">
+                <h4>{errMess}</h4>
+            </div>);
+        }else{
+            if(dish!=null)
+            {
+                    return(<div className="col-12 col-md-5 m-1">
+                    <Card>
+                    <CardImg top src={dish.image} alt={dish.name}/>
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+                </div>
+                
+               );
+            }else
+            {
+                return(<div></div>);
+            }
         }
+       
     }
 
 export default DishDetail;
