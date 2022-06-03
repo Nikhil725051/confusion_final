@@ -21,28 +21,36 @@ import { Loading } from "./LoadingComponent";
             </div>
           <div className="row">
           <RenderDish dish={props.dish} isLoading={props.isLoading} errMess={props.errMess}></RenderDish>
-         <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} ></RenderComments>
+         <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} errMess={props.commentsErrMess} ></RenderComments>
           </div>
         </div>);
     }
 
-    function RenderComments({comments, dishId, addComment}){
+    function RenderComments({comments, dishId, addComment, errMess}){
 
-        if(comments!=null)
-        {
-            return (<div className="col-12 col-md-5">
-                <h2>Comments</h2>
-                {comments.map((dishComment)=>{
-                    return(<ul className="list-unstyled">
-                        <li>{dishComment.comment}</li>
-                        <li>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</li>
-                    </ul>)
-                })}
-                <Comment dishId={dishId} addComment={addComment}></Comment>
-            </div>);
-        }
-        else{
-            return(<div></div>);
+        if(errMess){
+           return (
+            <div className="col-12 col-md-5">
+            <h4>{errMess}</h4>
+        </div>               
+           )
+        }else{
+            if(comments!=null)
+            {
+                return (<div className="col-12 col-md-5">
+                    <h2>Comments</h2>
+                    {comments.map((dishComment)=>{
+                        return(<ul className="list-unstyled">
+                            <li>{dishComment.comment}</li>
+                            <li>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</li>
+                        </ul>)
+                    })}
+                    <Comment dishId={dishId} addComment={addComment}></Comment>
+                </div>);
+            }
+            else{
+                return(<div></div>);
+            }            
         }
 
     }
