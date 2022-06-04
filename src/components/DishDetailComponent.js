@@ -21,12 +21,12 @@ import { Loading } from "./LoadingComponent";
             </div>
           <div className="row">
           <RenderDish dish={props.dish} isLoading={props.isLoading} errMess={props.errMess}></RenderDish>
-         <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} errMess={props.commentsErrMess} ></RenderComments>
+         <RenderComments comments={props.comments} dishId={props.dish.id} postComment={props.postComment} errMess={props.commentsErrMess} ></RenderComments>
           </div>
         </div>);
     }
 
-    function RenderComments({comments, dishId, addComment, errMess}){
+    function RenderComments({comments, dishId, postComment, errMess}){
 
         if(errMess){
            return (
@@ -45,7 +45,7 @@ import { Loading } from "./LoadingComponent";
                             <li>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</li>
                         </ul>)
                     })}
-                    <Comment dishId={dishId} addComment={addComment}></Comment>
+                    <Comment dishId={dishId} postComment={postComment}></Comment>
                 </div>);
             }
             else{
