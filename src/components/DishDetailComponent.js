@@ -4,6 +4,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbIte
 import { baseUrl } from "../shared/baseUrl";
 import Comment from "./CommentComponent";
 import { Loading } from "./LoadingComponent";
+import {FadeTransform, Fade, Stagger} from "react-animation-components"
 
 
 
@@ -39,12 +40,22 @@ import { Loading } from "./LoadingComponent";
             {
                 return (<div className="col-12 col-md-5">
                     <h2>Comments</h2>
-                    {comments.map((dishComment)=>{
-                        return(<ul className="list-unstyled">
-                            <li>{dishComment.comment}</li>
-                            <li>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</li>
-                        </ul>)
-                    })}
+                    
+                     <ul className="list-unstyled">
+                      <Stagger in>
+                       {comments.map((dishComment)=>{
+                         return(
+                             <Fade in>
+                              <li key={dishComment.id}>
+                                <p>{dishComment.comment}</p>
+                                <p>--{dishComment.author}, {new Date(dishComment.date).toDateString()}</p>
+                              </li>
+                            </Fade>
+                           )
+                       })}
+                       </Stagger>
+                      </ul>
+                   
                     <Comment dishId={dishId} postComment={postComment}></Comment>
                 </div>);
             }
@@ -68,13 +79,18 @@ import { Loading } from "./LoadingComponent";
             if(dish!=null)
             {
                     return(<div className="col-12 col-md-5 m-1">
-                    <Card>
-                    <CardImg top src={baseUrl+dish.image} alt={dish.name}/>
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                        <FadeTransform in
+                                        transformProps={{
+                                            exitTransform : "scale(0.5) translateY(-50%)"
+                                        }}>
+                          <Card>
+                           <CardImg top src={baseUrl+dish.image} alt={dish.name}/>
+                           <CardBody>
+                             <CardTitle>{dish.name}</CardTitle>
+                             <CardText>{dish.description}</CardText>
+                           </CardBody>
+                          </Card>
+                        </FadeTransform>
                 </div>
                 
                );
