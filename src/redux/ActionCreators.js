@@ -148,3 +148,71 @@ export const promosFailed = (errMess) => ({
     type : ActionTypes.PROMOS_FAILED,
     payload : errMess
 })
+
+export const postFeedback = (firstName, lastName, telNum, email, agree, contactType, message) => (dispatch) => {
+    const feedback ={
+        fistName : firstName,
+        lastName : lastName,
+        telNum : telNum,
+        email : email,
+        agree : agree,
+        contactType : contactType,
+        message : message
+    }
+    return fetch(baseUrl + 'feedback', {
+        method : "post",
+        body : JSON.stringify(feedback),
+        headers:{
+            "content-Type" : "application/json"
+        },
+        credentials : "same-origin"
+    },
+    (error) => {throw error;} )
+    .then((response) =>{
+        if(response.ok){
+            return response.json()
+        }else{
+            var error = new Error('Error '+ response.status + ':' + response.statusText);
+            error.response=response;
+            throw error;
+        }
+    })
+    .then((feedback) => alert(JSON.stringify(feedback)))
+    .catch((error) => {
+        console.log('post feedback', error.message);
+        alert('We have encountered some error posting your feedback\nError : ' + error.message);
+    })
+   
+}
+
+export const fetchLeaders = () => (dispatch) => {
+    dispatch(leadersLoading());
+
+    return fetch(baseUrl + 'leaders')
+    .then((response) => {
+        if(response.ok){
+            return response.json();
+        }else{
+            var error = new Error('Error ' + response.status + ' : ' + response.statusText);
+            error.response=response;
+            throw error;
+        }
+    },
+    (error) => {throw error;})
+    .then((leaders) => dispatch(addLeaders(leaders)))
+    .catch((error)=>dispatch(leadersFailed(error.message)));
+}
+
+export const leadersLoading = () => ({
+    type: ActionTypes.LEADERS_LOADING
+})
+
+export const addLeaders = (leaders) => ({
+    type : ActionTypes.ADD_LEADERS,
+    payload : leaders
+})
+
+export const leadersFailed = (errMess) => ({
+    type : ActionTypes.LEADERS_FAILED,
+    payload : errMess
+})
