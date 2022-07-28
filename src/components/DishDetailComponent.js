@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem} from "reactstrap";
+import { Card, CardImg, CardText, CardImgOverlay, Button, CardBody, CardTitle, Breadcrumb, BreadcrumbItem} from "reactstrap";
 import { baseUrl } from "../shared/baseUrl";
 import Comment from "./CommentComponent";
-import { Loading } from "./LoadingComponent";
 import {FadeTransform, Fade, Stagger} from "react-animation-components"
+
 
 
 
@@ -12,17 +12,19 @@ import {FadeTransform, Fade, Stagger} from "react-animation-components"
         return (<div className="container">
             <div className="row">
                 <Breadcrumb>
-                  <BreadcrumbItem><Link to="Menu">Menu</Link></BreadcrumbItem>
-                  <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                  <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+                  <BreadcrumbItem active>{props?.dish?.name}</BreadcrumbItem>
                 </Breadcrumb>
                 <div className="col-12">
-                    <h3>{props.dish.name}</h3>
+                    <h3>{props?.dish?.name}</h3>
                     <hr/>
                 </div>
             </div>
           <div className="row">
-          <RenderDish dish={props.dish} isLoading={props.isLoading} errMess={props.errMess}></RenderDish>
-         <RenderComments comments={props.comments} dishId={props.dish.id} postComment={props.postComment} errMess={props.commentsErrMess} ></RenderComments>
+          <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite} />
+                        <RenderComments comments={props?.comments}
+                            postComment={props.postComment}
+                            dishId={props?.dish?._id} />
           </div>
         </div>);
     }
@@ -66,40 +68,33 @@ import {FadeTransform, Fade, Stagger} from "react-animation-components"
 
     }
 
-   function RenderDish({dish, isLoading, errMess}){
-        if(isLoading){
-            return(
-                <Loading></Loading>
-            );
-        }else if(errMess){
-            return (<div className="col-12">
-                <h4>{errMess}</h4>
-            </div>);
-        }else{
-            if(dish!=null)
-            {
-                    return(<div className="col-12 col-md-5 m-1">
-                        <FadeTransform in
-                                        transformProps={{
-                                            exitTransform : "scale(0.5) translateY(-50%)"
-                                        }}>
-                          <Card>
-                           <CardImg top src={baseUrl+dish.image} alt={dish.name}/>
-                           <CardBody>
-                             <CardTitle>{dish.name}</CardTitle>
-                             <CardText>{dish.description}</CardText>
-                           </CardBody>
-                          </Card>
-                        </FadeTransform>
-                </div>
-                
-               );
-            }else
-            {
-                return(<div></div>);
-            }
-        }
-       
-    }
+    function RenderDish({dish, favourite, postFavorite}) {
+        return(
+            <div className="col-12 col-md-5 m-1">
+                <FadeTransform in 
+                    transformProps={{
+                        exitTransform: 'scale(0.5) translateY(-50%)'
+                    }}>
+                    <Card>
+                        <CardImg top src={baseUrl + dish?.image} alt={dish?.name} />
+                        <CardImgOverlay>
+                            <Button outline color="primary" onClick={() => favourite ? console.log('Already favorite') : postFavorite(dish?._id)}>
+                                {favourite ?
+                                    <span className="fa fa-heart"></span>
+                                    : 
+                                    <span className="fa fa-heart-o"></span>
+                                }
+                            </Button>
+                        </CardImgOverlay>
+                        <CardBody>
+                            <CardTitle>{dish?.name}</CardTitle>
+                            <CardText>{dish?.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </FadeTransform>
+            </div>
+        );
+
+}
 
 export default DishDetail;

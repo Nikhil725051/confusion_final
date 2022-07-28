@@ -8,9 +8,10 @@ import Contact from "./ContactComponent";
 import DishDetail from "./DishDetailComponent";
 import About from "./AboutComponent";
 import { connect } from "react-redux";
-import { postComment, fetchComments, fetchDishes, fetchPromos, postFeedback, fetchLeaders } from "../redux/ActionCreators";
+import { postComment, fetchComments, fetchDishes, fetchPromos, postFeedback, fetchLeaders, postFavourite, fetchFavourites, deleteFavourite, loginUser, logoutUser } from "../redux/ActionCreators";
 import { actions } from "react-redux-form";
 import {TransitionGroup, CSSTransition} from "react-transition-group";
+import Favourites from "./favouriteComponent";
 
 
 
@@ -19,7 +20,9 @@ const mapStateToProps = state => {
     dishes : state.dishes,
     comments: state.comments,
     promotions : state.promotions,
-    leaders : state.leaders
+    leaders : state.leaders,
+    favourites : state.favourites,
+    auth: state.auth
   }
 }
 
@@ -30,7 +33,12 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPromos : () =>{dispatch(fetchPromos())},
   fetchLeaders : () => dispatch(fetchLeaders()),
   resetFeedbackForm : () => {dispatch(actions.reset('feedback'))},
-  postFeedback : (firstName, lastName, telNum, email, agree, contactType, message) => dispatch(postFeedback(firstName, lastName, telNum, email, agree, contactType, message))
+  postFeedback : (firstName, lastName, telNum, email, agree, contactType, message) => dispatch(postFeedback(firstName, lastName, telNum, email, agree, contactType, message)),
+  postFavourites : (dishId) => dispatch(postFavourite(dishId)),
+  fetchFavourites : () => dispatch(fetchFavourites()),
+  deleteFavourite : (dishId) => dispatch(deleteFavourite(dishId)),
+  loginUser: (creds) => dispatch(loginUser(creds)),
+  logoutUser: () => dispatch(logoutUser()),
 })
 
 
@@ -52,6 +60,7 @@ function MainContent(props){
       leadersLoading={props.leaders.isLoading}
       leadersErrMess={props.leaders.errMess}></Home>}></Route>
       <Route exact path="/menu" element={<Menu dishes={props.dishes}></Menu>} />
+      <Route exact path="favourites" element={<PrivateRoute><Favourites favourites={props.favourites} deleteFavourite={props.deleteFavourite}></Favourites></PrivateRoute>}></Route>
       <Route path="/contactus" element={<Contact resetFeedbackForm = {props.resetFeedbackForm} postFeedback={props.postFeedback}></Contact>}></Route>
       <Route exact path="/menu/:dishId" element={<DishWithId 
       dishes={props.dishes} 
@@ -69,12 +78,15 @@ function MainContent(props){
   )
 }
 
+function PrivateRoute({children}){
+  return this.props.auth.isAuthenticated ?  children : <Navigate to='/home'/>
+}
+
 function DishWithId(props){
   const {dishId} = useParams();
- 
   return (<DishDetail 
-    dish={props.dishes.dishes.filter((dish)=>dish.id===parseInt(dishId,10))[0]} 
-    comments={props.comments.filter((comment)=>comment.dishId===parseInt(dishId,10))}
+    dish={props?.dishes?.dishes?.filter((dish)=>dish._id===dishId)[0]} 
+    comments={props.comments.filter((comment)=>comment.dish===dishId)}
     commentsErrMess={props.commentsErrMess}
     postComment={props.postComment} 
     dishesLoading={props.dishesLoading} 
@@ -91,12 +103,16 @@ class Main extends Component
     this.props.fetchComments();
     this.props.fetchPromos();
     this.props.fetchLeaders();
+    this.props.fetchFavourites();
   }
   
   render(){
 
     return (<div>
-      <Header></Header>
+      <Header
+          auth={this.props.auth} 
+          loginUser={this.props.loginUser} 
+          logoutUser={this.props.logoutUser} ></Header>
       <MainContent {...this.props}></MainContent>
       <Footer></Footer>
     </div>);
